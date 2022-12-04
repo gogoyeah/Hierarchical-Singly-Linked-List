@@ -1,0 +1,201 @@
+//
+//  main.cpp
+//  projecModified
+//
+//  Created by Abdumannob Muydinov on 28/11/22.
+//
+
+#include <iostream>
+#include<cmath>
+using namespace std;
+class Child
+{
+    int childAge;
+    string childName;
+public:
+    Child* nextChild;
+    int getChildAge(){
+        return childAge;
+    };
+    void setChildAge(int age){
+        this->childAge=age;
+    };
+    string getChildName(){
+        return childName;
+    };
+    void setChildName(string name){
+        this->childName=name;
+    };
+    
+};
+class Spouse
+{
+    int spouseAge;
+    string spouseName;
+    int num_children;
+   
+    void insertChildAtFront(int age, string name){
+        Child *child=new Child;
+        child->setChildAge(age);
+        child->setChildName(name);
+        if(!childHead){
+            childHead=child;
+            childHead->nextChild=NULL;
+        }else{
+            Child *temp=childHead;
+            childHead=child;
+            child->nextChild=temp;
+        }
+        
+    };
+public:
+    Child* childHead;
+    Child* getChildHead(){
+        return childHead;
+    }
+    Spouse() {
+//        cout<<"inside spouse"<<endl;
+//        cout<<this<<endl;
+        cout << "Enter the number of children" << endl;
+        cin >> num_children;
+        if (num_children <= 0) {num_children = 0;}
+        else
+        {
+            childHead = NULL;
+            childrenDetails();
+        }
+    }
+    int getSpouseAge(){
+        return spouseAge;
+    };
+    void setSpouseAge(int age){
+        this->spouseAge=age;
+    };
+    string getSpouseName(){
+        return spouseName;
+    };
+    void setSpouseName(string name){
+        this->spouseName=name;
+    };
+    void childrenDetails(){
+        for(int i=0;i<num_children;i++){
+            string childName;
+            int childAge;
+            cout<<"Enter a child's age: "<<endl;
+            cin>>childAge;
+            cout<<"Enter a child's name: "<<endl;
+            cin>>childName;
+            insertChildAtFront(childAge, childName);
+        }
+    };
+    void printChildrenDetails(){
+        Child *temp=childHead;
+        while(temp){
+            cout<<temp->getChildAge()<<endl;
+            cout<<temp->getChildName()<<endl;
+        }
+    };
+    ~Spouse()
+    {
+        Child* currChild = childHead;
+        while (currChild)
+        {
+            childHead = currChild->nextChild;
+            delete currChild;
+            currChild = childHead;
+        }
+    }
+    
+};
+struct Employee
+{
+    bool isSpouseAvailable;
+    string employee_name, designation, email;
+    int employee_id, age;
+    Employee* nextEmployee;
+    Employee() {
+        cout << "Enter 1 if employee is married, 0 otherwise" << endl;
+        cin >> isSpouseAvailable;
+        spouseLink = NULL;
+        if (isSpouseAvailable)
+        {
+//            cout<<"reating spouse"<<endl;
+            spouseLink = new Spouse;
+            spouseDetails();
+        }
+    }
+    ~Employee()
+    {
+        delete spouseLink;
+    }
+    void printChildrenDetails(){
+        //cout<<"inside print child"<<endl;
+        //Spouse sp;
+        if(isSpouseAvailable)
+        {
+            Child *ch=spouseLink->getChildHead();
+            while(ch){
+                cout<<ch->getChildAge()<<endl;
+                cout<<ch->getChildName()<<endl;
+                ch=ch->nextChild;
+            }
+        }
+        
+    };
+private:
+    Spouse* spouseLink;
+    void spouseDetails(){
+        string sname;int sage;
+        cout<<"Enter spouse age: "<<endl;
+        cin>>sage;
+        cout<<"Enter spouse name: "<<endl;
+        cin>>sname;
+        spouseLink->setSpouseAge(sage);
+        spouseLink->setSpouseName(sname);
+        
+        }
+        
+};
+struct List
+{
+    List()
+    {
+        head = NULL;
+    }
+    void insertEmployeeAtFront(string employee_name, string designation, string email,int employee_id, int age    ){
+        
+        Employee *newEmployee= new Employee;
+        newEmployee->employee_name=employee_name;
+        newEmployee->designation=designation;
+        newEmployee->email=email;
+        newEmployee->employee_id=employee_id;
+        if(!head){
+            head=newEmployee;
+            head->nextEmployee=NULL;
+        }else{
+            Employee *temp=head;
+            head=newEmployee;
+            head->nextEmployee=temp;
+        }
+        
+        
+        
+    }
+    void printAllEmpChildDetails(){
+        Employee *firstEmp=head;
+        while(firstEmp){
+            
+            firstEmp->printChildrenDetails();
+            firstEmp=firstEmp->nextEmployee;
+        }
+    }
+        
+private:
+    Employee* head;
+};
+int main(){
+    List l1;
+    l1.insertEmployeeAtFront("Saidislom", "jigar", "Kromniy", 69, 28);
+  //  l1.insertEmployeeAtFront("Saim", "gr", "Kry", 9, 2);
+    l1.printAllEmpChildDetails();
+}
